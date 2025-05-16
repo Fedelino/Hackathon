@@ -4,3 +4,5 @@ together
 openai-whisper
 sounddevice
 numpy
+gtts
+playsound
