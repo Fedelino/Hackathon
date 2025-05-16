@@ -3,7 +3,7 @@ import sounddevice as sd
 import whisper
 import queue
 from API_call import call_llm
-from vice_output_3 import play_audio_from_text
+from voice_output_3 import play_audio_from_text
 
 model = whisper.load_model("base")
 
