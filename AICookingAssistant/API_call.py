@@ -13,7 +13,7 @@ def ask_llm(user_input):
     response = requests.post(
         "https://api.together.xyz/inference",
         headers={
-            "Authorization": f"Bearer YOUR_API_KEY",  # Replace with your actual key
+            "Authorization": "tgp_v1_K551Xt2XcS1IEuA3jLXw3PGc7kvh5NZrcKjbmxX3va8",
             "Content-Type": "application/json"
         },
         json={
@@ -25,3 +25,8 @@ def ask_llm(user_input):
     )
 
     return response.json()["output"]["choices"][0]["text"].strip()
+
+
+user_input = "Start making spaghetti carbonara"
+response = ask_llm(user_input)
+print(response)
