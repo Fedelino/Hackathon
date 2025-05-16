@@ -2,15 +2,15 @@ import numpy as np
 import sounddevice as sd
 import whisper
 import queue
-import time
+from API_call import call_llm
+from vice_output_3 import play_audio_from_text
 
-# Load Whisper model
-model = whisper.load_model("base")  # lightweight & fast model
+model = whisper.load_model("base")
 
 # Audio settings
 samplerate = 16000
 channels = 1
-block_duration = 1  # seconds of audio per block
+block_duration = 0.5  # seconds of audio per block
 
 q = queue.Queue()
 
@@ -50,10 +50,12 @@ def main():
 
                         # Run Whisper transcription
                         result = model.transcribe(audio_norm, fp16=False)
-                        text = result["text"].strip()
+                        text = result["text"]
 
                         if text:
-                            print(f"Recognized: {text}")
+                            print(f"Transcribed: {text}")
+                            output_text = call_llm(text)
+                            play_audio_from_text(output_text)
 
                     # Clear buffer after transcribing silence
                     audio_buffer = []

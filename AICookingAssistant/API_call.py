@@ -8,13 +8,15 @@ messages = [
                                   "hands free."},
 ]
 
-print("Cooking Assistant is ready. Say something")
 
-while True:
-    user_input = input("You: ")
+def call_llm(user_input: str):
+    """
+    Sends a user input to the LLM and prints the streamed response.
 
+    Assumes `client` and `messages` are defined globally.
+    """
     if user_input.lower() in ["quit", "exit", "stop"]:
-        break
+        return "Session ended."
 
     messages.append({"role": "user", "content": user_input})
 
@@ -33,3 +35,4 @@ while True:
 
     print("\n")
     messages.append({"role": "assistant", "content": assistant_reply})
+    return assistant_reply
