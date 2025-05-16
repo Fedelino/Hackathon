@@ -3,7 +3,7 @@ from together import Together
 client = Together(api_key="tgp_v1_K551Xt2XcS1IEuA3jLXw3PGc7kvh5NZrcKjbmxX3va8")
 
 messages = [
-    {"role": "system", "content": "You are a helpful cooking assistant. Give only one short and clear "
+    {"role": "system", "content": "You are a helpful cooking assistant. Give a detailed complete recipe "
                                   "step at a time, suitable for a user who is busy cooking and has no "
                                   "hands free."},
 ]
