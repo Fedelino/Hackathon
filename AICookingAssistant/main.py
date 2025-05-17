@@ -4,6 +4,7 @@ import whisper
 import queue
 from API_call import call_llm
 from voice_output_3 import play_audio_from_text
+import time
 
 model = whisper.load_model("base")
 
@@ -28,6 +29,7 @@ def is_silence(data, threshold=0.01):
 
 def main():
     print("Starting continuous speech recognition... (press Ctrl+C to stop)")
+    play_audio_from_text("Hello! I am your cooking assistant. Please tell me what you want to cook today.")
 
     audio_buffer = []
 
@@ -54,6 +56,7 @@ def main():
 
                         if text:
                             print(f"Transcribed: {text}")
+                            current_time = time.time()
                             output_text = call_llm(text)
                             play_audio_from_text(output_text)
 

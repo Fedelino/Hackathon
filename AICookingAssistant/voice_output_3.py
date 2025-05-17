@@ -25,7 +25,7 @@ def generate_audio(text: str, voice: str):
 voice_id = "helpful woman"
 
 
-def play_audio_from_text(text: str):
+def play_audio_from_text(text: str, speed: float = 1.2):
     """
     Generates audio from the given text, converts it to WAV, and plays it.
 
@@ -38,7 +38,7 @@ def play_audio_from_text(text: str):
 
     try:
         ffmpeg.input("speech.pcm", format="f32le", ar=44100, ac=1) \
-            .output("speech.wav", format="wav", acodec="pcm_s16le") \
+            .output("speech.wav", format="wav", acodec="pcm_s16le", af=f"atempo={speed}") \
             .run(overwrite_output=True, capture_stdout=True, capture_stderr=True)
     except ffmpeg.Error as e:
         print("FFmpeg stderr:", e.stderr.decode())

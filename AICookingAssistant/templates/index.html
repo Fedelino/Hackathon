@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>AI Cooking Assistant</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🍳 AI Cooking Assistant</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+      <label>Upload a food image:</label><br>
+      <input type="file" name="image" accept="image/*"><br><br>
+
+      <label>Or type your question:</label><br>
+      <textarea name="prompt" rows="4" placeholder="e.g., What can I cook with cheese and tomatoes?"></textarea><br><br>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    {% if ingredients %}
+      <div class="section">
+        <h2>🧠 Detected Ingredients:</h2>
+        <ul>
+          {% for item in ingredients %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if reply %}
+      <div class="section">
+        <h2>🤖 Recipe Suggestion:</h2>
+        <p>{{ reply }}</p>
+
+        <h2>🔊 Listen:</h2>
+        <audio controls>
+          <source src="/static/speech.wav" type="audio/wav">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>
