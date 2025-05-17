@@ -1,12 +1,14 @@
 from PIL import Image
 from io import BytesIO
 import requests
+from keys import HUGGING_FACE_API_KEY
 
 API_URL = "https://router.huggingface.co/hf-inference/models/nateraw/food"
 HEADERS = {
-    "Authorization": "Bearer ",
+    "Authorization": f"Bearer {HUGGING_FACE_API_KEY}",
     "Content-Type": "image/jpeg"
 }
+
 
 def classify_food(image_path_or_file):
     """
@@ -28,6 +30,7 @@ def classify_food(image_path_or_file):
     response = requests.post(API_URL, headers=HEADERS, data=img_bytes)
     response.raise_for_status()
     return response.json()
+
 
 # Leave the testing CLI block as-is
 if __name__ == "__main__":

@@ -1,15 +1,14 @@
-import os
 import cv2
 import requests
 from PIL import Image
 from io import BytesIO
 from together import Together
+from keys import HUGGING_FACE_API_KEY
 
-HUGGINGFACE_API_TOKEN = ""
 HF_MODEL_URL = "https://api-inference.huggingface.co/models/nateraw/food"
 
 HEADERS = {
-    "Authorization": f"Bearer {HUGGINGFACE_API_TOKEN}",
+    "Authorization": f"Bearer {HUGGING_FACE_API_KEY}",
     "Content-Type": "image/jpeg"
 }
 
