@@ -5,6 +5,10 @@ import requests
 import ffmpeg
 import simpleaudio as sa
 import os
+import tempfile
+import subprocess
+import os
+from flask import send_file, request
 
 from image import classify_food  # reuse image classification
 from ask_llm import ask_llm  # LLM that generates recipes
@@ -80,17 +84,32 @@ def parse_reply(reply_text):
 
 @app.route("/listen", methods=["POST"])
 def listen():
-    file = request.files["audio"]
-    input_path = "input.webm"
-    wav_path = "output.wav"
-    file.save(input_path)
+    audio_file = request.files["audio"]
 
-    # Convert to WAV (if needed)
-    os.system(f"ffmpeg -y -i {input_path} -ar 16000 -ac 1 {wav_path}")
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as input_tmp:
+        audio_file.save(input_tmp.name)
+        input_path = input_tmp.name
 
-    # Transcribe, get AI reply, and generate reply.wav from AI
-    talk_to_ai(wav_path)  # <- Your own function already does this
-    return send_file("reply.wav", mimetype="audio/wav")
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as wav_tmp:
+        wav_path = wav_tmp.name
+
+    # Convert input to WAV 16kHz mono
+    subprocess.run([
+        "ffmpeg", "-y", "-i", input_path, "-ar", "16000", "-ac", "1", wav_path
+    ], check=True)
+
+    # Call your talk_to_ai function with the wav_path
+    # It should create "reply.wav" or better: return a path or file object
+    reply = talk_to_ai(wav_path)
+
+    # Assuming talk_to_ai outputs reply.wav in current dir, send it:
+    response = send_file(reply, mimetype="audio/wav")
+
+    # Cleanup temp files
+    os.remove(wav_path)
+    os.remove(input_path)
+
+    return response
 
 
 if __name__ == '__main__':
