@@ -4,7 +4,6 @@ import whisper
 import queue
 from API_call import call_llm
 from voice_output_3 import play_audio_from_text
-import time
 
 model = whisper.load_model("base")
 
@@ -56,7 +55,6 @@ def main():
 
                         if text:
                             print(f"Transcribed: {text}")
-                            current_time = time.time()
                             output_text = call_llm(text)
                             play_audio_from_text(output_text)
 

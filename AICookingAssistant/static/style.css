@@ -50,3 +50,33 @@ button:hover {
 .section {
   margin-top: 2rem;
 }
+
+.recipe-box {
+  background: #f0f8ff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  margin-top: 1rem;
+}
+
+.recipe-section {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+#dish-title {
+  font-size: 1.6rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+#ask-ai-btn {
+  background-color: #2196F3;
+  color: white;
+  margin-top: 1rem;
+}
+
+#ask-ai-btn:hover {
+  background-color: #1976D2;
+}

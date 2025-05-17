@@ -31,17 +31,41 @@
     {% endif %}
 
     {% if reply %}
-      <div class="section">
-        <h2>🤖 Recipe Suggestion:</h2>
-        <p>{{ reply }}</p>
+  <div class="section">
+    <h2>🍽️ Dish Recommendation</h2>
 
-        <h2>🔊 Listen:</h2>
+    <div class="recipe-box">
+      <h3 id="dish-title">{{ reply.splitlines()[0] }}</h3>
+
+      <div class="recipe-section">
+        <h4>🧂 Ingredients:</h4>
+        <ul>
+          {% for item in ingredients %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="recipe-section">
+        <h4>📋 Recipe Instructions:</h4>
+        <p>{{ reply }}</p>
+      </div>
+
+      <div class="recipe-section">
+        <h4>🔊 Listen to Instructions:</h4>
         <audio controls>
           <source src="/static/speech.wav" type="audio/wav">
           Your browser does not support the audio element.
         </audio>
       </div>
-    {% endif %}
+
+      <div class="recipe-section">
+        <button id="ask-ai-btn">🎙️ Ask the AI a Question</button>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
   </div>
 </body>
 </html>

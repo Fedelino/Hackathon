@@ -7,11 +7,10 @@ import simpleaudio as sa
 import os
 
 from image import classify_food  # reuse image classification
-from API_call import call_llm  # reuse LLM prompt call
-from voice_output_3 import generate_audio  # reuse TTS generation
+from API_call import call_llm           # reuse LLM prompt call
+from voice_output_3 import play_audio_from_text
 
 app = Flask(__name__)
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -29,7 +28,7 @@ def index():
 
         # Compose prompt
         if ingredients and not custom_prompt:
-            full_prompt = f"I have {', '.join(ingredients)}. What can I cook with them?"
+            full_prompt = f"I have {', '.join(ingredients)}. What is it? From where is it from? And what is the recipe?"
         elif ingredients and custom_prompt:
             full_prompt = f"With {', '.join(ingredients)}, {custom_prompt}"
         else:
@@ -38,15 +37,13 @@ def index():
         # Call LLM and TTS
         if full_prompt:
             reply = call_llm(full_prompt)
-            generate_audio(reply)  # writes to static/speech.wav
+            play_audio_from_text(reply)  # writes to static/speech.wav
 
     return render_template("index.html", ingredients=ingredients, reply=reply)
-
 
 @app.route('/static/<path:path>')
 def serve_static(path):
     return send_from_directory('static', path)
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
