@@ -11,6 +11,7 @@ from talk_to_ai import talk_to_ai  # TTS that generates audio from text
 
 app = Flask(__name__)
 
+
 app.secret_key = 'your_secret_key'
 
 
