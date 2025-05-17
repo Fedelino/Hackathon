@@ -9,7 +9,6 @@ import os
 from image import classify_food  # reuse image classification
 from ask_llm import ask_llm  # LLM that generates recipes
 
-
 app = Flask(__name__)
 
 
@@ -37,14 +36,47 @@ def index():
 
         # Call LLM and TTS
         if full_prompt:
-            reply = ask_llm(full_prompt)
+            raw_reply = ask_llm(full_prompt)
+            reply = parse_reply(raw_reply)
 
-    return render_template("index.html", ingredients=ingredients, reply=reply)
+    return render_template("index.html", reply=reply, ingredients=ingredients)
 
 
 @app.route('/static/<path:path>')
 def serve_static(path):
     return send_from_directory('static', path)
+
+
+def parse_reply(reply_text):
+    reply = {'title': '', 'ingredients': [], 'steps': []}
+    lines = reply_text.strip().splitlines()
+    current = None
+
+    for line in lines:
+        line = line.strip()
+
+
+        if not line:
+            continue  # skip empty lines
+
+        # Title line (bold markdown style)
+        if line.startswith("**") and line.endswith("**") and not reply['title']:
+            reply['title'] = line.strip("*").strip()
+
+        # Section headers
+        elif "**Ingredients:**" in line:
+            current = 'ingredients'
+        elif "**Steps:**" in line or "**Instructions:**" in line:
+            current = 'steps'
+
+        # Parse items under current section
+        elif current == 'ingredients' and line.startswith("-"):
+            reply['ingredients'].append(line.lstrip("- ").strip())
+
+        elif current == 'steps' and (line[0].isdigit() and line[1] == '.'):
+            reply['steps'].append(line.strip())
+
+    return reply
 
 
 if __name__ == '__main__':

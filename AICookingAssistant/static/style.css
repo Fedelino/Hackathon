@@ -80,3 +80,15 @@ button:hover {
 #ask-ai-btn:hover {
   background-color: #1976D2;
 }
+
+.no-bullets {
+  list-style-type: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.no-bullets li {
+  list-style-type: none;
+  padding-left: 0;
+  margin-left: 0;
+}

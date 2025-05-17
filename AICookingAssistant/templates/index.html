@@ -1,71 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>AI Cooking Assistant</title>
-  <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <title>AI Cooking Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <div class="container">
+<div class="container">
     <h1>🍳 AI Cooking Assistant</h1>
 
     <form method="POST" enctype="multipart/form-data">
-      <label>Upload a food image:</label><br>
-      <input type="file" name="image" accept="image/*"><br><br>
+        <label>Upload a food image:</label><br>
+        <input type="file" name="image" accept="image/*"><br><br>
 
-      <label>Or type your question:</label><br>
-      <textarea name="prompt" rows="4" placeholder="e.g., What can I cook with cheese and tomatoes?"></textarea><br><br>
+        <label>Or type your question:</label><br>
+        <textarea name="prompt" rows="4"
+                  placeholder="e.g., What can I cook with cheese and tomatoes?"></textarea><br><br>
 
-      <button type="submit">Submit</button>
+        <button type="submit">Submit</button>
     </form>
 
     {% if ingredients %}
-      <div class="section">
+    <div class="section">
         <h2>🧠 Detected Ingredients:</h2>
         <ul>
-          {% for item in ingredients %}
+            {% for item in ingredients %}
             <li>{{ item }}</li>
-          {% endfor %}
+            {% endfor %}
         </ul>
-      </div>
+    </div>
     {% endif %}
 
     {% if reply %}
-  <div class="section">
-    <h2>🍽️ Dish Recommendation</h2>
+    <div class="section">
 
-    <div class="recipe-box">
-      <h3 id="dish-title">{{ reply.splitlines()[0] }}</h3>
+        <div class="recipe-box">
+            <h3 id="dish-title">{{ reply["title"] }}</h3>
 
-      <div class="recipe-section">
-        <h4>🧂 Ingredients:</h4>
-        <ul>
-          {% for item in ingredients %}
-            <li>{{ item }}</li>
-          {% endfor %}
-        </ul>
-      </div>
+            <div class="recipe-section">
+                <h4>🧂 Ingredients:</h4>
+                <ul>
+                    {% for item in reply["ingredients"] %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
 
-      <div class="recipe-section">
-        <h4>📋 Recipe Instructions:</h4>
-        <p>{{ reply }}</p>
-      </div>
+            <div class="recipe-section">
+                <h4>📋 Recipe Instructions:</h4>
+                <ul class="no-bullets">
+                    {% for item in reply["steps"] %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
 
-      <div class="recipe-section">
-        <h4>🔊 Listen to Instructions:</h4>
-        <audio controls>
-          <source src="/static/speech.wav" type="audio/wav">
-          Your browser does not support the audio element.
-        </audio>
-      </div>
-
-      <div class="recipe-section">
-        <button id="ask-ai-btn">🎙️ Ask the AI a Question</button>
-      </div>
+            <div class="recipe-section">
+                <button id="ask-ai-btn">🎙️ Ask the AI a Question</button>
+            </div>
+        </div>
     </div>
-  </div>
-{% endif %}
 
-  </div>
+    {% endif %}
+
+</div>
 </body>
 </html>

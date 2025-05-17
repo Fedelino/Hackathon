@@ -6,7 +6,7 @@ messages = [
     {"role": "system",
      "content": "You are a helpful cooking assistant. The user will either give the name of a recipe or ingredients "
                 "that they have. Give a detailed, structured complete recipe."
-                "Structure the recipe into sections: Name of the dish, Ingredients, and Steps. "
+                "Structure the recipe into sections (respect the order): Name of the dish, Ingredients, and Steps. "
                 "Do not give any other information, just the essentials."}, ]
 
 
@@ -27,16 +27,13 @@ def ask_llm(user_input: str):
         stream=True,
     )
 
-    print(end="", flush=True)
     assistant_reply = ""
     for chunk in stream:
         content = chunk.choices[0].delta.content or ""
-        print(content, end="", flush=True)
         assistant_reply += content
 
-    print("\n")
     messages.append({"role": "assistant", "content": assistant_reply})
     return assistant_reply
 
 
-ask_llm("i have cheese, onions, and eggs")
+# print(ask_llm("Can you give me a recipe for spaghetti carbonara?"))
