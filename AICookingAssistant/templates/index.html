@@ -4,6 +4,27 @@
     <meta charset="UTF-8">
     <title>AI Cooking Assistant</title>
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .drop-box {
+            border: 2px dashed #aaa;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #f9f9f9;
+        }
+
+        .drop-box.hover {
+            background-color: #e0ffe0;
+        }
+
+        #preview {
+            margin-top: 15px;
+            max-width: 100%;
+            height: auto;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -11,7 +32,12 @@
 
     <form method="POST" enctype="multipart/form-data">
         <label>Upload a food image:</label><br>
-        <input type="file" name="image" accept="image/*"><br><br>
+
+        <div class="drop-box" id="drop-box">
+            Click or drag an image here to upload
+            <input type="file" name="image" accept="image/*" id="image-input" style="display:none;">
+        </div>
+        <img id="preview" alt="Image Preview"><br><br>
 
         <label>Or type your question:</label><br>
         <textarea name="prompt" rows="4"
@@ -33,7 +59,6 @@
 
     {% if reply %}
     <div class="section">
-
         <div class="recipe-box">
             <h3 id="dish-title">{{ reply["title"] }}</h3>
 
@@ -58,16 +83,54 @@
             <div class="recipe-section">
                 <button id="ask-ai-btn">🎙️ Ask the AI Assistant a Question</button>
                 <audio id="response-audio" controls hidden></audio>
-
             </div>
         </div>
     </div>
-
     {% endif %}
-
 </div>
 
 <script>
+const dropBox = document.getElementById("drop-box");
+const input = document.getElementById("image-input");
+const preview = document.getElementById("preview");
+
+dropBox.addEventListener("click", () => input.click());
+
+dropBox.addEventListener("dragover", e => {
+    e.preventDefault();
+    dropBox.classList.add("hover");
+});
+
+dropBox.addEventListener("dragleave", () => {
+    dropBox.classList.remove("hover");
+});
+
+dropBox.addEventListener("drop", e => {
+    e.preventDefault();
+    dropBox.classList.remove("hover");
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+        input.files = e.dataTransfer.files;
+        previewImage(file);
+    }
+});
+
+input.addEventListener("change", () => {
+    const file = input.files[0];
+    if (file) {
+        previewImage(file);
+    }
+});
+
+function previewImage(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+}
+
 document.getElementById("ask-ai-btn").onclick = async function () {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
@@ -84,7 +147,6 @@ document.getElementById("ask-ai-btn").onclick = async function () {
             body: formData
         });
 
-        // Get the wav audio from the response
         const audioBlob = await response.blob();
         const audioUrl = URL.createObjectURL(audioBlob);
         const audioPlayer = document.getElementById("response-audio");
@@ -95,14 +157,11 @@ document.getElementById("ask-ai-btn").onclick = async function () {
 
     mediaRecorder.start();
 
-    // Stop after 5 seconds
     setTimeout(() => {
         mediaRecorder.stop();
         stream.getTracks().forEach(track => track.stop());
     }, 5000);
 };
 </script>
-
-
 </body>
 </html>
