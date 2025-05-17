@@ -27,3 +27,4 @@ def talk_to_ai(input_file):
 
     # Speak the response
     play_audio_from_text(output_text)
+#ciao
