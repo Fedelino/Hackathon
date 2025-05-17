@@ -1,6 +1,6 @@
-import requests
 from PIL import Image
 from io import BytesIO
+import requests
 
 API_URL = "https://router.huggingface.co/hf-inference/models/nateraw/food"
 HEADERS = {
@@ -18,10 +18,9 @@ def classify_food(image_path_or_file):
     if isinstance(image_path_or_file, str):
         image = Image.open(image_path_or_file).convert("RGB")
     else:
-        # file-like object (e.g., Flask upload)
+        # Flask FileStorage object
         image = Image.open(BytesIO(image_path_or_file.read())).convert("RGB")
-        image_path_or_file.seek(0)  # reset pointer so Flask can re-read if needed
-
+        image_path_or_file.seek(0)
     buffered = BytesIO()
     image.save(buffered, format="JPEG")
     img_bytes = buffered.getvalue()
