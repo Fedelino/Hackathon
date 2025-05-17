@@ -18,14 +18,14 @@ def generate_audio(text: str, voice: str):
         "response_encoding": "pcm_f32le",
         "sample_rate": 44100,
         "stream": False,
-        "model": "cartesia/sonic",
+        "model": "cartesia/sonic-2",
     }
     response = requests.post(url, headers=headers, json=data)
     response.raise_for_status()
     return response.content
 
 
-def create_audio_from_text(text: str, speed: float = 1.2) -> BytesIO:
+def create_audio_from_text(text: str, speed: float = 1) -> BytesIO:
     raw_audio = generate_audio(text, voice_id)
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pcm") as pcm_file:

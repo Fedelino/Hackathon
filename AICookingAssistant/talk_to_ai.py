@@ -6,7 +6,7 @@ from generate_voice_output import create_audio_from_text
 model = whisper.load_model("base")
 
 
-def talk_to_ai(input_file):
+def talk_to_ai(input_file, context):
     """
     Transcribes the audio in input_file, sends the text to the LLM,
     generates the AI response audio, and returns the path to the audio file.
@@ -21,7 +21,7 @@ def talk_to_ai(input_file):
 
     print(f"Transcribed: {text}")
 
-    output_text = call_llm(text)
+    output_text = call_llm(text, context)
 
     # Generate the audio file but don't play it, just return the path
     reply_audio_path = create_audio_from_text(output_text)

@@ -16,7 +16,7 @@ def generate_audio(text: str, voice: str):
         "response_encoding": "pcm_f32le",
         "sample_rate": 44100,
         "stream": False,
-        "model": "cartesia/sonic",
+        "model": "cartesia/sonic-2",
     }
     response = requests.post(url, headers=headers, json=data)
     return response.content

@@ -38,10 +38,11 @@ def index():
         else:
             full_prompt = custom_prompt
 
-        # Call LLM and TTS
-        if full_prompt:
-            raw_reply = ask_llm(full_prompt)
-            reply = parse_reply(raw_reply)
+            if full_prompt:
+                raw_reply = ask_llm(full_prompt)
+                reply = parse_reply(raw_reply)
+
+    return render_template("index.html", reply=reply, ingredients=ingredients)
 
     return render_template("index.html", reply=reply, ingredients=ingredients)
 
