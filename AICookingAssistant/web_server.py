@@ -7,10 +7,11 @@ import simpleaudio as sa
 import os
 
 from image import classify_food  # reuse image classification
-from API_call import call_llm           # reuse LLM prompt call
-from voice_output_3 import play_audio_from_text
+from ask_llm import ask_llm  # LLM that generates recipes
+
 
 app = Flask(__name__)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -36,14 +37,15 @@ def index():
 
         # Call LLM and TTS
         if full_prompt:
-            reply = call_llm(full_prompt)
-            play_audio_from_text(reply)  # writes to static/speech.wav
+            reply = ask_llm(full_prompt)
 
     return render_template("index.html", ingredients=ingredients, reply=reply)
+
 
 @app.route('/static/<path:path>')
 def serve_static(path):
     return send_from_directory('static', path)
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
