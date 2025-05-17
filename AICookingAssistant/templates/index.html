@@ -56,7 +56,9 @@
             </div>
 
             <div class="recipe-section">
-                <button id="ask-ai-btn">🎙️ Ask the AI a Question</button>
+                <button id="ask-ai-btn">🎙️ Ask the AI Assistant a Question</button>
+                <audio id="response-audio" controls hidden></audio>
+
             </div>
         </div>
     </div>
@@ -64,5 +66,43 @@
     {% endif %}
 
 </div>
+
+<script>
+document.getElementById("ask-ai-btn").onclick = async function () {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+    const chunks = [];
+
+    mediaRecorder.ondataavailable = e => chunks.push(e.data);
+    mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        const formData = new FormData();
+        formData.append("audio", blob, "recording.webm");
+
+        const response = await fetch("/listen", {
+            method: "POST",
+            body: formData
+        });
+
+        // Get the wav audio from the response
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audioPlayer = document.getElementById("response-audio");
+        audioPlayer.src = audioUrl;
+        audioPlayer.hidden = false;
+        audioPlayer.play();
+    };
+
+    mediaRecorder.start();
+
+    // Stop after 5 seconds
+    setTimeout(() => {
+        mediaRecorder.stop();
+        stream.getTracks().forEach(track => track.stop());
+    }, 5000);
+};
+</script>
+
+
 </body>
 </html>

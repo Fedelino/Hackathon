@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_from_directory
+from flask import Flask, request, render_template, send_from_directory, send_file
 from PIL import Image
 from io import BytesIO
 import requests
@@ -8,6 +8,7 @@ import os
 
 from image import classify_food  # reuse image classification
 from ask_llm import ask_llm  # LLM that generates recipes
+from talk_to_ai import talk_to_ai  # TTS that generates audio from text
 
 app = Flask(__name__)
 
@@ -22,9 +23,8 @@ def index():
 
         # Use image if provided
         if uploaded_image:
-            image = Image.open(uploaded_image)
-            prediction = classify_food(image)
-            ingredients = [item['label'] for item in prediction[:3]]
+            prediction = classify_food(uploaded_image)
+            ingredients = [prediction[0]['label']]
 
         # Compose prompt
         if ingredients and not custom_prompt:
@@ -76,6 +76,21 @@ def parse_reply(reply_text):
             reply['steps'].append(line.strip())
 
     return reply
+
+
+@app.route("/listen", methods=["POST"])
+def listen():
+    file = request.files["audio"]
+    input_path = "input.webm"
+    wav_path = "output.wav"
+    file.save(input_path)
+
+    # Convert to WAV (if needed)
+    os.system(f"ffmpeg -y -i {input_path} -ar 16000 -ac 1 {wav_path}")
+
+    # Transcribe, get AI reply, and generate reply.wav from AI
+    talk_to_ai(wav_path)  # <- Your own function already does this
+    return send_file("reply.wav", mimetype="audio/wav")
 
 
 if __name__ == '__main__':
