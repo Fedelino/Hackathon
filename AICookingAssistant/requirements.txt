@@ -1,8 +1,4 @@
-whisper
-requests
-together
 openai-whisper
-sounddevice
-numpy
-gtts
-playsound
+ffmpeg-python
+flask
+together
